@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "701237630047",
+    "firebase_url": "https://overdoseshawarma-8b8ba-default-rtdb.firebaseio.com",
+    "project_id": "overdoseshawarma-8b8ba",
+    "storage_bucket": "overdoseshawarma-8b8ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701237630047:android:1fe48b55c9f04cfb9a77ea",
+        "android_client_info": {
+          "package_name": "com.shawerma.overdose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701237630047-ieaf4mksov9a21hun2lgkk0gtbjuo1d7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shawerma.overdose",
+            "certificate_hash": "589671283c21a4b8c13ae35169e5914d1615348c"
+          }
+        },
+        {
+          "client_id": "701237630047-8sacm56t6h59f0e9p90dehb9946prmaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChBBGthsoVm920lwlMGS6-oQt3kNLkSw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701237630047-8sacm56t6h59f0e9p90dehb9946prmaj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701237630047:android:5c17ef4db905344b9a77ea",
+        "android_client_info": {
+          "package_name": "com.u6amtech.restaurant_delivery_boy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701237630047-k8ps56a061q5qqmbilq1iurj0he5muo5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.u6amtech.restaurant_delivery_boy",
+            "certificate_hash": "589671283c21a4b8c13ae35169e5914d1615348c"
+          }
+        },
+        {
+          "client_id": "701237630047-8sacm56t6h59f0e9p90dehb9946prmaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChBBGthsoVm920lwlMGS6-oQt3kNLkSw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701237630047-8sacm56t6h59f0e9p90dehb9946prmaj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
