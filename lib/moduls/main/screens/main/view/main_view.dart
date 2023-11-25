@@ -46,8 +46,8 @@ class _MainScreenState extends State<MainScreen> {
             items: [
               BottomBarItem(
                 icon: SizedBox(
-                  height: 27,
-                  width: 27,
+                  height: 20,
+                  width: 20,
                   child: Image.asset(IconsManager.more),
                 ),
                 title: Text(
@@ -64,8 +64,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
               BottomBarItem(
                 icon: SizedBox(
-                  height: 27,
-                  width: 27,
+                  height: 20,
+                  width: 20,
                   child: Image.asset(IconsManager.user),
                 ),
                 title: Text(
@@ -86,8 +86,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
               BottomBarItem(
                 icon: SizedBox(
-                  height: 27,
-                  width: 27,
+                  height: 20,
+                  width: 20,
                   child: Image.asset(IconsManager.bag),
                 ),
                 title: Text(
@@ -103,8 +103,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
               BottomBarItem(
                 icon: SizedBox(
-                  height: 27,
-                  width: 27,
+                  height: 20,
+                  width: 20,
                   child: Image.asset(IconsManager.menu),
                 ),
                 title: Text(

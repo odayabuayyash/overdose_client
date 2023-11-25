@@ -18,7 +18,7 @@ Widget getCustomTextFormField(
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: TextFormField(
-          textDirection: TextDirection.rtl,
+          textDirection: TextDirection.ltr,
           keyboardType: keyboardType,
           validator: validator,
           textAlign: TextAlign.right,

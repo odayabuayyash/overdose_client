@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:overdose/app/dependency_injection.dart';
+import 'package:overdose/app/shared_preferences.dart';
 import 'package:overdose/core/common/public_widgets.dart/custom_button.dart';
 import 'package:overdose/core/common/state_rendrer/state_rendrer_impl.dart';
 import 'package:overdose/core/resources/color_manager.dart';
 import 'package:overdose/core/resources/fonts_manager.dart';
 import 'package:overdose/core/resources/image_manager.dart';
 import 'package:overdose/core/resources/styles_manager.dart';
+import 'package:overdose/moduls/authentication/screens/welcome/view/welcome_view.dart';
 import 'package:overdose/moduls/main/domain/models/order_model.dart';
 import 'package:overdose/moduls/main/screens/order_tracker/view/order_page.dart';
 import 'package:overdose/moduls/main/screens/order_tracker/viewmodel/order_tracker_viewmodel.dart';
@@ -23,15 +25,21 @@ class _OrderTrackerScreenState extends State<OrderTrackerScreen> {
   _OrderTrackerScreenState(this.loc);
   final OrderTrackerViewModel _trackerViewModel =
       inectance<OrderTrackerViewModel>();
+  bool? isLogin;
+
+  final AppPreferences _preferences = inectance<AppPreferences>();
+
   @override
   void initState() {
     _trackerViewModel.start();
+    isLogin = _preferences.getIsLogin() ?? false;
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLogin != null && isLogin == false
+        ? const WelcomeScreen()
+        :  Scaffold(
       body: Column(
         children: [
           const SizedBox(

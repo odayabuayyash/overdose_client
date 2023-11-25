@@ -22,13 +22,14 @@ class OrderTrackerViewModel extends BaseViewModel
   @override
   start() {
     flowStateInput.add(LoadingStateFullScreen(''));
+    
     getOrderData();
   }
 
   @override
   getOrderData() async {
     List<Map>? data = await _dataSource.onReedDbUser();
-    id = data?[0]['id'];
+    //id = data?[0]['id'];
     print("$id******");
     if (id != null) {
       print('not null');

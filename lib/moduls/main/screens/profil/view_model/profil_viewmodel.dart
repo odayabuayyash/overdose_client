@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:overdose/app/dependency_injection.dart';
 import 'package:overdose/app/shared_preferences.dart';
 import 'package:overdose/core/local_data/remote_local_data.dart';
 import 'package:overdose/core/resources/routes_manager.dart';
@@ -38,6 +39,8 @@ class ProfilViewModel extends BaseViewModel with ProfilInputs, ProfilOutputs {
 
   int? id;
   String? firstName = '';
+  bool? isLogin;
+
 
   getUserData() async {
     List<Map>? user = await _dataSource.onReedDbUser();
@@ -63,7 +66,11 @@ class ProfilViewModel extends BaseViewModel with ProfilInputs, ProfilOutputs {
   @override
   start() {
     statesButton2Input.add('active');
-    getUserData();
+    isLogin = _preferences.getIsLogin() ?? false;
+    print(isLogin);
+    if (isLogin != null && isLogin == true) {
+      getUserData();
+    }
     enableEditingInputInput.add(true);
     statesButtonInput.add('active_non');
   }

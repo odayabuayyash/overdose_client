@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:overdose/app/dependency_injection.dart';
+import 'package:overdose/app/shared_preferences.dart';
 import 'package:overdose/core/bases/base_viewmodel.dart';
 import 'package:overdose/core/local_data/remote_local_data.dart';
 import 'package:overdose/core/resources/color_manager.dart';
@@ -20,10 +21,15 @@ class DetailsViewModel extends BaseViewModel with DetailsInpts, DetailsOutpts {
   final RemoteLocalDataSource _dataSource;
   DetailsViewModel(this._dataSource);
 
+  final AppPreferences _preferences = inectance<AppPreferences>();
+
   int totalPrice = 0;
   int counter = 1;
   int cardLength = 0;
   List<Map> myVariation = [];
+
+  bool? isLogin;
+
   @override
   dispose() {
     inectance.unregister<DetailsViewModel>();
@@ -107,44 +113,55 @@ class DetailsViewModel extends BaseViewModel with DetailsInpts, DetailsOutpts {
   @override
   addToCartd(BuildContext context, String title, double subPrice, String image,
       int item_id, HomeViewModel homeViewModel, int discount) async {
-    stateButtonInput.add('loading');
-    String varies = json.encode(myVariation);
+    isLogin = _preferences.getIsLogin() ?? false;
+    if (isLogin != null && isLogin == true) {
+      stateButtonInput.add('loading');
+      String varies = json.encode(myVariation);
 
-    Timer(
-      Duration(seconds: 3),
-      () async {
-        int response = await _dataSource.onInsertCards(
-            title: title,
-            subPrice: subPrice * counter,
-            totalPrice: double.parse(totalPrice.toString()),
-            count: counter,
-            varies: varies,
-            item_id: item_id,
-            discount: discount * counter);
-        if (response > 0) {
-          showToast('تمت الاضافة الى السلة',
-              context: context,
-              fullWidth: true,
-              position: StyledToastPosition.top,
-              textStyle: getSemiBoldStyle(14, ColorManager.white, ''),
-              duration: const Duration(seconds: 4),
-              animDuration: const Duration(milliseconds: 200),
-              backgroundColor: Colors.green);
-          stateButtonInput.add('selected');
-          getCardLength();
-          homeViewModel.getCounter();
-        } else if (response == 0) {
-          stateButtonInput.add('active');
-          showToast('حدث خطا في اضافة المقتنيات الى السلة',
-              context: context,
-              position: StyledToastPosition.top,
-              duration: const Duration(seconds: 4),
-              animDuration: const Duration(milliseconds: 200),
-              textStyle: getSemiBoldStyle(14, ColorManager.white, ''),
-              backgroundColor: ColorManager.reed);
-        }
-      },
-    );
+      Timer(
+        Duration(seconds: 3),
+        () async {
+          int response = await _dataSource.onInsertCards(
+              title: title,
+              subPrice: subPrice * counter,
+              totalPrice: double.parse(totalPrice.toString()),
+              count: counter,
+              varies: varies,
+              item_id: item_id,
+              discount: discount * counter);
+          if (response > 0) {
+            showToast('تمت الاضافة الى السلة',
+                context: context,
+                fullWidth: true,
+                position: StyledToastPosition.top,
+                textStyle: getSemiBoldStyle(14, ColorManager.white, ''),
+                duration: const Duration(seconds: 4),
+                animDuration: const Duration(milliseconds: 200),
+                backgroundColor: Colors.green);
+            stateButtonInput.add('selected');
+            getCardLength();
+            homeViewModel.getCounter();
+          } else if (response == 0) {
+            stateButtonInput.add('active');
+            showToast('حدث خطا في اضافة المقتنيات الى السلة',
+                context: context,
+                position: StyledToastPosition.top,
+                duration: const Duration(seconds: 4),
+                animDuration: const Duration(milliseconds: 200),
+                textStyle: getSemiBoldStyle(14, ColorManager.white, ''),
+                backgroundColor: ColorManager.reed);
+          }
+        },
+      );
+    } else {
+      showToast('يجب تسجيل الدخول لمتابعة العملية',
+          context: context,
+          position: StyledToastPosition.top,
+          duration: const Duration(seconds: 4),
+          animDuration: const Duration(milliseconds: 200),
+          textStyle: getSemiBoldStyle(14, ColorManager.white, ''),
+          backgroundColor: ColorManager.reed);
+    }
   }
 
   getCardLength() async {

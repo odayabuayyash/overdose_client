@@ -46,13 +46,14 @@ class HomeViewModel extends BaseViewModel with HomeInputs, HomeIOutPuts {
   start() {
     getHomeData();
     getCounter();
-    location = _appPreferences.getLocation() ?? '';
-    langi = _appPreferences.getLangitude() ?? 0;
-    lati = _appPreferences.getLatitude() ?? 0;
+    //// location = _appPreferences.getLocation() ?? '';
+    ////  langi = _appPreferences.getLangitude() ?? 0;
+    //  lati = _appPreferences.getLatitude() ?? 0;
     print(lati);
     print("------");
     print(langi);
-    locationInput.add(location);
+
+    ///  locationInput.add(location);
     counterCardInput.add(counter);
   }
 
@@ -104,6 +105,7 @@ class HomeViewModel extends BaseViewModel with HomeInputs, HomeIOutPuts {
   getHomeData() async {
     allProducts = [];
     products = [];
+    category = [];
     flowStateInput.add(LoadingStateFullScreen(""));
     (await _homeUseCace.excute(HomeInpts())).fold(
         (faileur) =>
@@ -133,9 +135,57 @@ class HomeViewModel extends BaseViewModel with HomeInputs, HomeIOutPuts {
             });
   }
 
+  getGeoLocationPosition(
+    BuildContext context,
+  ) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: ColorManager.reed,
+            duration: Duration(seconds: 3),
+            content: Text(
+              "يجب السماح للتطبيق بالوصول الى نضام GPS",
+              style: getSemiBoldStyle(14, ColorManager.white, ""),
+            )));
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    langi = position.longitude;
+    lati = position.latitude;
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
+
+    locationInput.add(
+        "${placemarks.first.locality} , ${placemarks.first.subLocality} , ${placemarks.first.street}");
+
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
   @override
   goToPageLocation(BuildContext context, HomeViewModel homeViewModel) async {
-    var status = await Permission.location.status;
+    final status = await Permission.location.request();
+    print(status);
+
     if (status.isGranted) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => LocationScreen(
@@ -160,18 +210,16 @@ class HomeViewModel extends BaseViewModel with HomeInputs, HomeIOutPuts {
     }
   }
 
-
-
   @override
   showLocation(bool showed) {
     showed == true ? showLocationInput.add(false) : showLocationInput.add(true);
   }
 
-  updateLocation(double lat,double lang,String locationn) {
+  updateLocation(double lat, double lang, String locationn) {
     location = locationn;
     lati = lat;
     langi = lang;
-    
+
     locationInput.add(locationn);
   }
 

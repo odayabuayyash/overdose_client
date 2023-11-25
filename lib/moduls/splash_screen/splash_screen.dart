@@ -22,13 +22,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Timer? countTimer;
   startTimer() {
-    countTimer = Timer.periodic(
-        Duration(seconds: 5),
-        (_) => Navigator.of(context).pushReplacementNamed(isLogin == true
-            ? Routes.mainScreen
-            : isSkepedOnboarding == true
-                ? Routes.welcomeScreen
-                : Routes.onboardingScreen));
+    countTimer = Timer.periodic(Duration(seconds: 5),
+        (_) => Navigator.of(context).pushReplacementNamed(Routes.mainScreen));
   }
 
   @override
@@ -38,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     startTimer();
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _homeViewModel.start();
+    _homeViewModel.getGeoLocationPosition(context);
     super.initState();
   }
 
@@ -139,11 +140,16 @@ class _HomeScreenState extends State<HomeScreen> {
 // ----------------------------------------------------------
       body: StreamBuilder<FlowState>(
           stream: _homeViewModel.flowStateOutput,
-          builder: (context, snapshot) =>
-              snapshot.data?.getScreenWidget(_getContent(), context, () {
-                _homeViewModel.getHomeData();
-              }) ??
-              _getContent()),
+          builder: (context, snapshot) => RefreshIndicator(
+                onRefresh: () async {
+                  await _homeViewModel.getHomeData();
+                },
+                child:
+                    snapshot.data?.getScreenWidget(_getContent(), context, () {
+                          _homeViewModel.getHomeData();
+                        }) ??
+                        _getContent(),
+              )),
     );
   }
 
@@ -306,25 +312,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(10),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
-                              progressIndicatorBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress != null) {
-                                  return SizedBox(
-                                      width: 80,
-                                      height: 80,
-                                      child:
-                                          Lottie.asset(LottieManager.loading));
-                                } else {
-                                  return const SizedBox();
-                                }
-                              },
                               imageUrl: "${Constants.baseUrl}${e.image}",
-                              placeholder: (context, url) =>
-                                 SizedBox(
-                                                width: 80,
-                                                height: 80,
-                                                child: Lottie.asset(
-                                                    LottieManager.loading)),
+                              placeholder: (context, url) => SizedBox(
+                                  width: 80,
+                                  height: 80,
+                                  child: Lottie.asset(LottieManager.loading)),
                               errorWidget: (context, error, stackTrace) =>
                                   const Icon(
                                 Icons.error,
@@ -372,28 +364,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Hero(
                                       tag: '${index + 1000}',
                                       child: CachedNetworkImage(
-                                        
                                         fit: BoxFit.cover,
-                                        progressIndicatorBuilder:
-                                            (context, child, loadingProgress) {
-                                          if (loadingProgress != null) {
-                                            return SizedBox(
-                                                width: 80,
-                                                height: 80,
-                                                child: Lottie.asset(
-                                                    LottieManager.loading));
-                                          } else {
-                                            return const SizedBox();
-                                          }
-                                        },
                                         imageUrl:
                                             "${Constants.baseUrl}${Constants.categoryUrl}${snapshot.data?[index].images}",
-                                        placeholder: (context, url) =>
-                                           SizedBox(
-                                                width: 80,
-                                                height: 80,
-                                                child: Lottie.asset(
-                                                    LottieManager.loading)),
+                                        placeholder: (context, url) => SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: Lottie.asset(
+                                                LottieManager.loading)),
                                         errorWidget:
                                             (context, error, stackTrace) =>
                                                 const Icon(
@@ -474,33 +452,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(16),
                                     child: Hero(
                                       tag: "$index",
-                                      child:   CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              progressIndicatorBuilder:
-                                 (context, child, loadingProgress) {
-                                          if (loadingProgress != null) {
-                                            return SizedBox(
-                                                width: 80,
-                                                height: 80,
-                                                child: Lottie.asset(
-                                                    LottieManager.loading));
-                                          } else {
-                                            return const SizedBox();
-                                          }
-                                        },
-                              imageUrl:  "${Constants.baseUrl}${Constants.producrUrl}${snapshot.data![index].image}",
-                              placeholder: (context, url) =>
-                                SizedBox(
-                                                width: 80,
-                                                height: 80,
-                                                child: Lottie.asset(
-                                                    LottieManager.loading)),
-                              errorWidget: (context, error, stackTrace) =>
-                                  const Icon(
-                                Icons.error,
-                                color: ColorManager.primary,
-                              ),
-                            ),
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl:
+                                            "${Constants.baseUrl}${Constants.producrUrl}${snapshot.data![index].image}",
+                                        placeholder: (context, url) => SizedBox(
+                                            width: 80,
+                                            height: 80,
+                                            child: Lottie.asset(
+                                                LottieManager.loading)),
+                                        errorWidget:
+                                            (context, error, stackTrace) =>
+                                                const Icon(
+                                          Icons.error,
+                                          color: ColorManager.primary,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

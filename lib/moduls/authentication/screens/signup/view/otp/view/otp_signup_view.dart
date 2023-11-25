@@ -10,6 +10,7 @@ import 'package:overdose/core/resources/color_manager.dart';
 import 'package:overdose/core/resources/fonts_manager.dart';
 import 'package:overdose/core/resources/styles_manager.dart';
 import 'package:overdose/moduls/authentication/screens/signup/view/otp/viewmodel/otp_signup_viewmodel.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../../../../../app/dependency_injection.dart';
 import '../../../../../../../core/common/state_rendrer/state_rendrer_impl.dart';
 import '../../../../../../../core/resources/routes_manager.dart';
@@ -66,11 +67,55 @@ class _OtpSignupScreenState extends State<OtpSignupScreen> {
       required this.password,
       required this.token});
 
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _getContent(),
     );
+  }
+
+  onSubnit(String e) async {
+    final _auth = FirebaseAuth.instance;
+    showDialog(
+        context: context,
+        builder: ((context) => Dialog(
+            backgroundColor: Color.fromARGB(0, 0, 0, 0),
+            elevation: 0,
+            child: showDialogLoading())));
+    try {
+      PhoneAuthCredential credincial = PhoneAuthProvider.credential(
+          verificationId: credincialID, smsCode: e);
+      await _auth.signInWithCredential(credincial);
+      dimissDialog(context);
+      if (_auth.currentUser != null) {
+        // ignore: use_build_context_synchronously
+        _otpSignupViewModel.completSignup(context,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone,
+            password: password,
+            token: token);
+      } else {
+        dimissDialog(context);
+        showToast("الرمز خاطأ . يارجى التاكد من الرمز و اعادة المحاولة",
+            duration: const Duration(seconds: 5),
+            context: context,
+            backgroundColor: ColorManager.reed,
+            textStyle:
+                getSemiBoldStyle(14, ColorManager.white, FontsConstants.cairo));
+      }
+    } catch (e) {
+      dimissDialog(context);
+      showToast("الرمز خاطأ . يارجى التاكد من الرمز و اعادة المحاولة",
+          duration: const Duration(seconds: 5),
+          context: context,
+          backgroundColor: ColorManager.reed,
+          textStyle:
+              getSemiBoldStyle(14, ColorManager.white, FontsConstants.cairo));
+    }
   }
 
   Widget _getContent() {
@@ -113,66 +158,43 @@ class _OtpSignupScreenState extends State<OtpSignupScreen> {
                 SizedBox(
                   height: 55,
                   width: double.infinity,
-                  child: OtpTextField(
-                    numberOfFields: 6,
-                    margin: const EdgeInsets.only(right: 4, left: 4),
-                    textStyle: getBoldStyle(
-                        18, ColorManager.primary, FontsConstants.cairo),
-                    autoFocus: true,
-                    focusedBorderColor: ColorManager.primary,
-                    cursorColor: ColorManager.primary,
-                    filled: true,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    showFieldAsBox: true,
-                    keyboardType: TextInputType.phone,
-                    borderRadius: BorderRadius.circular(20),
-                    fieldWidth: 40.w,
-                    fillColor: ColorManager.grey2,
-                    onSubmit: (e) async {
-                      final _auth = FirebaseAuth.instance;
-                      showDialog(
-                          context: context,
-                          builder: ((context) => Dialog(
-                              backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                              elevation: 0,
-                              child: showDialogLoading())));
-                      try {
-                        PhoneAuthCredential credincial =
-                            PhoneAuthProvider.credential(
-                                verificationId: credincialID, smsCode: e);
-                        await _auth.signInWithCredential(credincial);
-                        dimissDialog(context);
-                        if (_auth.currentUser != null) {
-                          // ignore: use_build_context_synchronously
-                          _otpSignupViewModel.completSignup(context,
-                              firstName: firstName,
-                              lastName: lastName,
-                              email: email,
-                              phone: phone,
-                              password: password,
-                              token: token);
-                        } else {
-                          dimissDialog(context);
-                          showToast(
-                              "الرمز خاطأ . يارجى التاكد من الرمز و اعادة المحاولة",
-                              duration: const Duration(seconds: 5),
-                              context: context,
-                              backgroundColor: ColorManager.reed,
-                              textStyle: getSemiBoldStyle(14,
-                                  ColorManager.white, FontsConstants.cairo));
-                        }
-                      } catch (e) {
-                        dimissDialog(context);
-                        showToast(
-                            "الرمز خاطأ . يارجى التاكد من الرمز و اعادة المحاولة",
-                            duration: const Duration(seconds: 5),
-                            context: context,
-                            backgroundColor: ColorManager.reed,
-                            textStyle: getSemiBoldStyle(
-                                14, ColorManager.white, FontsConstants.cairo));
-                      }
-                    },
+                  child: Form(
+                    key: formKey,
+                    child: PinCodeTextField(
+                      backgroundColor: Colors.transparent,
+                      appContext: context,
+                      length: 6,
+                      obscureText: false,
+                      obscuringCharacter: '*',
+                      blinkWhenObscuring: true,
+                      errorTextDirection: TextDirection.rtl,
+                      cursorColor: ColorManager.primary,
+                      animationType: AnimationType.fade,
+                      validator: (v) {},
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(20),
+                        fieldHeight: 50,
+                        fieldWidth: 40.w,
+                        borderWidth: 1,
+                        activeColor: Colors.transparent,
+                        selectedColor: ColorManager.primary,
+                        inactiveColor: Colors.grey[200],
+                        inactiveFillColor: Colors.transparent,
+                        selectedFillColor: Colors.transparent,
+                        activeFillColor: ColorManager.primary,
+                      ),
+                      animationDuration: const Duration(milliseconds: 300),
+                      enableActiveFill: true,
+                      keyboardType: TextInputType.number,
+                      onCompleted: (smsCode) {
+                        onSubnit(smsCode);
+                      },
+                      onChanged: (value) {},
+                      beforeTextPaste: (text) {
+                        return true;
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(

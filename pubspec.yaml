@@ -33,6 +33,7 @@ dependencies:
   geolocator: ^9.0.2
   google_maps_flutter: ^2.2.3   
   permission_handler: ^10.2.0
+  pin_code_fields:
   map_picker: ^0.0.3
   stylish_bottom_bar: ^1.0.0
   animate_do: ^3.0.2

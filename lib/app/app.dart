@@ -33,11 +33,21 @@ class _MyAppState extends State<MyApp> {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
-              supportedLocales: const [Locale("ar", "AE")],
-              locale: const Locale('ar', 'AE'),
+              supportedLocales: const [
+                Locale(
+                  "ar",
+                  "AE",
+                ),
+                Locale(
+                  "En",
+                  "en",
+                ),
+              ],
+              locale: const Locale('en', 'En'),
               theme: getAppThemeData(),
               debugShowCheckedModeBanner: false,
-              home: SplashScreen(),
+              home: Directionality(
+                  textDirection: TextDirection.rtl, child: SplashScreen()),
             )));
   }
 }

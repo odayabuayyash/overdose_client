@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -24,7 +24,7 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                height: 330.h,
+                height: 280.h,
                 color: const Color.fromARGB(255, 248, 182, 58),
                 child: SizedBox(
                   height: double.infinity,
@@ -36,7 +36,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                  top: 300,
+                  top: 230,
                   right: 0,
                   left: 0,
                   child: Row(
@@ -64,7 +64,7 @@ class WelcomeScreen extends StatelessWidget {
                   right: 30,
                   child: SizedBox(
                     width: double.infinity,
-                    height: 230.h,
+                    height: 330.h,
                     child: Column(
                       children: [
                         Padding(

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overdose/app/dependency_injection.dart';
+import 'package:overdose/app/shared_preferences.dart';
 import 'package:overdose/core/local_data/remote_local_data.dart';
 import 'package:overdose/moduls/main/data/responses/home_responses.dart';
 import 'package:overdose/moduls/main/screens/home/view_model/home_viewmodel.dart';
@@ -33,15 +34,20 @@ class CardViewModel extends BaseViewModel with CardViewInputs, CardViewOutputs {
   List<Map> user = [];
   int userID = 0;
 
+  bool? isLogin;
+  final AppPreferences _preferences = inectance<AppPreferences>();
   @override
   dispose() {}
 
   @override
   start() {
+    isLogin = _preferences.getIsLogin() ?? false;
     subTotalPriceInput.add(subfinalPrice);
     totalPriceInput.add(finalPrice);
     getItemsCard();
-    getUserData();
+    if (isLogin != null && isLogin == true) {
+      getUserData();
+    }
   }
 
   // inputs

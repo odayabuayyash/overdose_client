@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:overdose/app/dependency_injection.dart';
+import 'package:overdose/app/shared_preferences.dart';
 import 'package:overdose/core/common/public_widgets.dart/custom_button.dart';
 import 'package:overdose/core/common/validator/validator_inputs.dart';
 import 'package:overdose/core/resources/color_manager.dart';
 import 'package:overdose/core/resources/fonts_manager.dart';
 import 'package:overdose/core/resources/image_manager.dart';
 import 'package:overdose/core/resources/styles_manager.dart';
+import 'package:overdose/moduls/authentication/screens/welcome/view/welcome_view.dart';
 import 'package:overdose/moduls/main/screens/profil/view_model/profil_viewmodel.dart';
 import 'package:overdose/moduls/main/screens/profil/widgets/profil_custom_form.dart';
 
@@ -18,17 +20,22 @@ class ProfilScreen extends StatefulWidget {
 }
 
 class _ProfilScreenState extends State<ProfilScreen> {
-  final ProfilViewModel _profilViewModel = inectance<ProfilViewModel>();
+   final ProfilViewModel _profilViewModel = inectance<ProfilViewModel>();
+  bool? isLogin;
+
+  final AppPreferences _preferences = inectance<AppPreferences>();
   @override
   void initState() {
     _profilViewModel.start();
-
+    isLogin = _preferences.getIsLogin() ?? false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isLogin != null && isLogin == false
+        ? const WelcomeScreen()
+        : Scaffold(
         appBar: AppBar(
           leading: const SizedBox(),
           backgroundColor: Colors.transparent,
